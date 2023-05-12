@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+
+	<title>BioPred</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<link rel="icon" type="image/png" href="img/icon.png">
+</head>
+<body>
+<!--	<img src="img\menu.png" class="menu" onclick="togglemenu()">-->
+	<nav id="menu">
+		<ul>
+			<li><a href="about.html">ABOUT</a></li>
+			<li><a href="us.html">THE RESEARCHERS</a></li>
+			<li><a href="how.html">HOW IT WORKS</a></li>
+		</ul>
+		<h1>KBD: BIOPRED</h1>
+	</nav>
+
+	<div id="controls">
+		<button id="recordButton">RECORD</button>
+		<button id="uploadButton">UPLOAD FILES</button>
+	</div>
+
+
+	<!-- inserting these scripts at the end to be able to use all the elements in the DOM -->
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.9.0"></script>
+<script>
+	async function loadModel() {
+		const model = await tf.loadLayersModel('model.json');//will try to convert plp.h5 or mfcc.h5 to tsjf
+		// Use the loaded model to make predictions
+		const prediction = model.predict(tf.tensor2d([[1, 2, 3, 4]], [1, 4]));
+		console.log(prediction.dataSync()); // Print the prediction
+	}
+
+	loadModel();
+</script>
+<script src="WebAudioRecorder.min.js"></script>
+<script src="app.js"></script>
+
+
+</body>
+<footer>
+	<p>KOBEDELTAPHI © 2023</p>
+</footer>
+</html>
