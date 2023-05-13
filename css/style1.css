@@ -40,7 +40,16 @@ h2 {
     margin-top: 17%;
     font-size: 20px;
 }
-
+#info{
+    color: white;
+    text-align: left;
+    margin-top: 20%;
+    margin-left: 20%;
+    font-size: 25px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
 red {
     color: red;
 }
