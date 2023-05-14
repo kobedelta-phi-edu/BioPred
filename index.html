@@ -55,50 +55,55 @@
 </script>
 <script>
 	async function processAudio() {
-		// Load the model
-		const model = await tf.loadLayersModel('../models/model.json');
-		const fileInput = document.getElementById('audio-file');
-		const fileNameDisplay = document.getElementById('file-name');
-		const processButton = document.getElementById('process-btn');
+		try {
+			// Load the model
+			const model = await tf.loadLayersModel('../models/model.json');
+			const fileInput = document.getElementById('audio-file');
+			const fileNameDisplay = document.getElementById('file-name');
+			const processButton = document.getElementById('process-btn');
 
-		fileInput.addEventListener('change', function() {
-			fileNameDisplay.textContent = fileInput.files[0].name;
-		});
-
-		processButton.addEventListener('click', async function() {
-			if (!fileInput.value) {
-				alert('Please select a file');
-				return;
-			}
-
-			processButton.textContent = 'Processing...';
-			processButton.disabled = true;
-
-			const file = fileInput.files[0];
-			const audioContext = new AudioContext();
-			const audioBuffer = await audioContext.decodeAudioData(await file.arrayBuffer());
-			const audioTensor = tf.tidy(() => {
-				const waveform = tf.tensor(audioBuffer.getChannelData(0));
-				const batched = waveform.reshape([1, -1, 1]);
-				const normalized = batched.div(32768.0);
-				return normalized;
+			fileInput.addEventListener('change', function() {
+				fileNameDisplay.textContent = fileInput.files[0].name;
 			});
 
-			const prediction = await model.predict(audioTensor);
-			const predictionArray = await prediction.array();
+			processButton.addEventListener('click', async function() {
+				if (!fileInput.value) {
+					alert('Please select a file');
+					return;
+				}
 
-			const age = predictionArray[0][0];
-			const sex = predictionArray[0][1];
-			const weight = predictionArray[0][2];
-			const height = predictionArray[0][3];
+				processButton.textContent = 'Processing...';
+				processButton.disabled = true;
 
-			const resultDisplay = document.getElementById('result');
-			resultDisplay.innerHTML = `Age: ${age.toFixed(2)}<br>Sex: ${sex.toFixed(2)}<br>Weight: ${weight.toFixed(2)}<br>Height: ${height.toFixed(2)}`;
+				const file = fileInput.files[0];
+				const audioContext = new AudioContext();
+				const audioBuffer = await audioContext.decodeAudioData(await file.arrayBuffer());
+				const audioTensor = tf.tidy(() => {
+					const waveform = tf.tensor(audioBuffer.getChannelData(0));
+					const batched = waveform.reshape([1, -1, 1]);
+					const normalized = batched.div(32768.0);
+					return normalized;
+				});
 
-			processButton.textContent = 'PROCESS';
-			processButton.disabled = false;
-		});
+				const prediction = await model.predict(audioTensor);
+				const predictionArray = await prediction.array();
+
+				const age = predictionArray[0][0];
+				const sex = predictionArray[0][1];
+				const weight = predictionArray[0][2];
+				const height = predictionArray[0][3];
+
+				const resultDisplay = document.getElementById('result');
+				resultDisplay.innerHTML = `Age: ${age.toFixed(2)}<br>Sex: ${sex.toFixed(2)}<br>Weight: ${weight.toFixed(2)}<br>Height: ${height.toFixed(2)}`;
+
+				processButton.textContent = 'PROCESS';
+				processButton.disabled = false;
+			});
+		} catch (error) {
+			console.error('Error loading the model:', error);
+		}
 	}
+
 </script>
 
 
