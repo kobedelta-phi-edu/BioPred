@@ -20,26 +20,86 @@
 		<h1>KBD: BIOPRED</h1>
 	</nav>
 
-	<div id="controls">
-<!--		<button id="recordButton">RECORD</button>-->
-		<button id="uploadButton">UPLOAD FILES</button>
-	</div>
-
+<!--	<div id="controls">-->
+<!--&lt;!&ndash;		<button id="recordButton">RECORD</button>&ndash;&gt;-->
+<!--		<button id="uploadButton">UPLOAD FILES</button>-->
+<!--	</div>-->
 
 	<!-- inserting these scripts at the end to be able to use all the elements in the DOM -->
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.9.0"></script>
-<script>
-	async function loadModel() {
-		const model = await tf.loadLayersModel('model.json');//will try to convert plp.h5 or mfcc.h5 to tsjf
-		// Use the loaded model to make predictions
-		const prediction = model.predict(tf.tensor2d([[1, 2, 3, 4]], [1, 4]));
-		console.log(prediction.dataSync()); // Print the prediction
-	}
 
-	loadModel();
+<div id="controls">
+	<form id="upload-form">
+		<div class="custom-file-input-wrapper">
+			<input type="file" id="audio-file" name="audio-file" accept="audio/*" class="custom-file-input">
+			<label for="audio-file" class="custom-file-input-label">Choose file</label>
+		</div>
+		<button id="process-btn" onclick="processAudio()">PROCESS</button>
+
+	</form>
+	<p id="file-name-label">AUDIO FILE</p>
+	<p id="file-name"></p>
+</div>
+
+<div id="result"></div>
+
+<script>
+	//audio file
+	const fileInput = document.getElementById('audio-file');
+	const fileNameDisplay = document.getElementById('file-name');
+
+	fileInput.addEventListener('change', () => {
+		const file = fileInput.files[0];
+		fileNameDisplay.textContent = file ? file.name : '';
+	});
 </script>
-<script src="WebAudioRecorder.min.js"></script>
-<script src="app.js"></script>
+<script>
+	async function processAudio() {
+		// Load the model
+		const model = await tf.loadLayersModel('../models/model.json');
+		const fileInput = document.getElementById('audio-file');
+		const fileNameDisplay = document.getElementById('file-name');
+		const processButton = document.getElementById('process-btn');
+
+		fileInput.addEventListener('change', function() {
+			fileNameDisplay.textContent = fileInput.files[0].name;
+		});
+
+		processButton.addEventListener('click', async function() {
+			if (!fileInput.value) {
+				alert('Please select a file');
+				return;
+			}
+
+			processButton.textContent = 'Processing...';
+			processButton.disabled = true;
+
+			const file = fileInput.files[0];
+			const audioContext = new AudioContext();
+			const audioBuffer = await audioContext.decodeAudioData(await file.arrayBuffer());
+			const audioTensor = tf.tidy(() => {
+				const waveform = tf.tensor(audioBuffer.getChannelData(0));
+				const batched = waveform.reshape([1, -1, 1]);
+				const normalized = batched.div(32768.0);
+				return normalized;
+			});
+
+			const prediction = await model.predict(audioTensor);
+			const predictionArray = await prediction.array();
+
+			const age = predictionArray[0][0];
+			const sex = predictionArray[0][1];
+			const weight = predictionArray[0][2];
+			const height = predictionArray[0][3];
+
+			const resultDisplay = document.getElementById('result');
+			resultDisplay.innerHTML = `Age: ${age.toFixed(2)}<br>Sex: ${sex.toFixed(2)}<br>Weight: ${weight.toFixed(2)}<br>Height: ${height.toFixed(2)}`;
+
+			processButton.textContent = 'PROCESS';
+			processButton.disabled = false;
+		});
+	}
+</script>
 
 
 </body>
