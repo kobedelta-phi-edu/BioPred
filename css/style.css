@@ -239,8 +239,11 @@ button:last-child {
   justify-content: center;
   align-items: center;
   color: white;
+  position: relative; /* Add this line */
+  z-index: 1; /* Add this line */
 }
 
 #result p {
   margin-right: 20px;
+  font-size: 25px;
 }
