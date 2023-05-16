@@ -253,6 +253,13 @@ html {
   color: #ffffff;
 }
 
+#extractor-name-label {
+  margin-top: 10px;
+  font-size: 20px;
+  font-weight: normal;
+  color: #ffffff;
+}
+
 #file-name {
   margin-top: 0;
   font-size: 25px;

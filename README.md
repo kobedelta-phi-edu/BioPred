@@ -3,5 +3,6 @@ Predictive Modeling of Biometric Identification using a PLP-CNN Voice Input Appr
 
 ## Backend
 ```bash
-python -m uvicorn backend:app --reload
+python -m uvicorn backend-plp:app --reload
+python -m uvicorn backend-mfcc:app --reload
 ```
