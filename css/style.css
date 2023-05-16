@@ -159,6 +159,7 @@ html {
   position: relative;
   overflow: hidden;
   display: inline-block;
+
 }
 
 .custom-file-input-wrapper input[type="file"] {
@@ -184,6 +185,22 @@ html {
   background-color: transparent;
 }
 
+.custom-file-input-wrapper .custom-file-input-label:hover {
+  font-size: 20px;
+  font-weight: normal;
+  text-align: center;
+  display: block;
+  padding: 10px 15px;
+  cursor: pointer;
+  color: black;
+  border-radius: 50px;
+  width: 150px;
+  margin-right: 10px;
+  margin-left: 10px;
+  border: transparent;
+  background-color: transparent;
+}
+
 
 
 #process-btn {
@@ -198,13 +215,32 @@ html {
   font-weight: normal;
   font-size: 20px;
 }
-
-
-button:last-child {
-  margin-right: 0;
+#play-btn {
+  flex-grow: 0.1;
+  height: 50px;
+  width: 150px;
+  border-radius: 50px;
+  border-color: #513294;
+  background-color: transparent;
+  cursor: pointer;
+  color: #ffffff;
+  font-weight: normal;
+  font-size: 20px;
 }
 
+
+/*button:last-child {*/
+/*  margin-right: 0;*/
+/*}*/
+
 #process-btn:hover, #process-btn:focus {
+  outline: none;
+  color: black;
+  background: #D9D9D9;
+}
+
+
+#play-btn:hover, #play-btn:focus {
   outline: none;
   color: black;
   background: #D9D9D9;
