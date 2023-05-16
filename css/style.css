@@ -146,6 +146,11 @@ html {
   height: 100%;
 }
 
+#upload-form {
+  display: flex;
+  align-items: center;
+}
+
 .custom-file-input-label {
   padding: 0;
 }
@@ -163,7 +168,6 @@ html {
   right: 0;
   top: 0;
 }
-
 .custom-file-input-wrapper .custom-file-input-label {
   font-size: 20px;
   font-weight: normal;
@@ -181,6 +185,7 @@ html {
 }
 
 
+
 #process-btn {
   flex-grow: 0.1;
   height: 50px;
@@ -189,14 +194,11 @@ html {
   border-color: #513294;
   background-color: transparent;
   cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   color: #ffffff;
   font-weight: normal;
   font-size: 20px;
-  margin-left: 10px;
 }
+
 
 button:last-child {
   margin-right: 0;
@@ -209,18 +211,14 @@ button:last-child {
 }
 
 #file-name-label {
-  display: inline-block;
-  margin-left: 10px;
-  vertical-align: middle;
+  margin-top: 10px;
   font-size: 20px;
   font-weight: normal;
   color: #ffffff;
 }
+
 #file-name {
   margin-top: 0;
-  display: inline-block;
-  margin-left: 10px;
-  vertical-align: middle;
   font-size: 25px;
   font-weight: bold;
   color: #ffffff;
@@ -241,6 +239,7 @@ button:last-child {
   color: white;
   position: relative; /* Add this line */
   z-index: 1; /* Add this line */
+  margin-bottom: 20px; /* Adjust this value to your preference */
 }
 
 #result p {
