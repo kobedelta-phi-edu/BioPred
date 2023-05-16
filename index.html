@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<!--	<script src=”https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.5.2/dist/tf.min.js"></script>-->
 	<meta charset="UTF-8">
 	<title>BioPred</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,14 +29,14 @@
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.9.0"></script>
 
 <div id="controls">
-	<form id="upload-form">
+	<div id="upload-form">
 		<div class="custom-file-input-wrapper">
 			<input type="file" id="audio-file" name="audio-file" accept="audio/*" class="custom-file-input">
 			<label for="audio-file" class="custom-file-input-label">Choose file</label>
 		</div>
 		<button id="process-btn" onclick="processAudio()">PROCESS</button>
 
-	</form>
+	</div>
 	<p id="file-name-label">AUDIO FILE</p>
 	<p id="file-name"></p>
 </div>
@@ -59,9 +60,13 @@
 </script>
 <script>
 	async function processAudio() {
+		console.log("sklkdsjf")
 		try {
 			// Load the model
-			const model = await tf.loadLayersModel('../models/model.json');
+			console.log("processing")
+			const model = await tf.loadLayersModel('../plp_cnn_model/model.json');
+			console.log(model)
+			console.log("sdfsdf")
 			const fileInput = document.getElementById('audio-file');
 			const fileNameDisplay = document.getElementById('file-name');
 			const processButton = document.getElementById('process-btn');
@@ -70,7 +75,7 @@
 				fileNameDisplay.textContent = fileInput.files[0].name;
 			});
 
-			processButton.addEventListener('click', async function() {
+				console.log("processing started")
 				if (!fileInput.value) {
 					alert('Please select a file');
 					return;
@@ -80,22 +85,30 @@
 				processButton.disabled = true;
 
 				const file = fileInput.files[0];
-				const audioContext = new AudioContext();
-				const audioBuffer = await audioContext.decodeAudioData(await file.arrayBuffer());
-				const audioTensor = tf.tidy(() => {
-					const waveform = tf.tensor(audioBuffer.getChannelData(0));
-					const batched = waveform.reshape([1, -1, 1]);
-					const normalized = batched.div(32768.0);
-					return normalized;
-				});
+				const url = document.getElementById("audio-file").value
+				console.log("FIELLEFLWEKAFAWEKFLWE", url)
+				// fetch("http://localhost:8000/plp?path=" + url)
+				// 		.then(res => res.json())
+				// 		.then(data => console.log(data))
+			const formData = new FormData();
+			formData.append("audio_file", file);
 
-				const prediction = await model.predict(audioTensor);
-				const predictionArray = await prediction.array();
+			const response = await fetch("http://localhost:8000/plp", {
+				method: "POST",
+				body: formData,
+			});
 
-				const age = predictionArray[0][0];
-				const sex = predictionArray[0][1];
-				const weight = predictionArray[0][2];
-				const height = predictionArray[0][3];
+			if (response.ok) {
+				const data = await response.json();
+				console.log("Predictions:", data);
+				console.log("type of data", typeof data)
+
+
+				// const age = predictionArray[0][0];
+				// const sex = predictionArray[0][1];
+				// const weight = predictionArray[0][2];
+				// const height = predictionArray[0][3];
+				// console.log("sd", age, sex, weight, height)
 
 				const resultDisplay = document.getElementById('result');
 				let ageLabel = document.getElementById('age-label');
@@ -103,14 +116,29 @@
 				let weightLabel = document.getElementById('weight-label');
 				let heightLabel = document.getElementById('height-label');
 
-				ageLabel.innerHTML = `Age: ${age.toFixed(2)}`;
-				sexLabel.innerHTML = `Sex: ${sex.toFixed(2)}`;
-				weightLabel.innerHTML = `Weight: ${weight.toFixed(2)}`;
-				heightLabel.innerHTML = `Height: ${height.toFixed(2)}`;
+				ageLabel.innerHTML = `Age: ${data["age"]}`;
+				sexLabel.innerHTML = `Sex: ${data["gender"] === "1.0" ? "Female" : "Male"}`;
+				weightLabel.innerHTML = `Weight: ${data["weight"]}`;
+				heightLabel.innerHTML = `Height: ${data["height"]}`;
 
 				processButton.textContent = 'PROCESS';
 				processButton.disabled = false;
-			});
+			} else {
+				console.error("Failed to upload audio file.");
+			}
+
+			// const audioContext = new AudioContext();
+			// 	const audioBuffer = await audioContext.decodeAudioData(await file.arrayBuffer());
+			// 	const audioTensor = tf.tidy(() => {
+			// 		const waveform = tf.tensor(audioBuffer.getChannelData(0));
+			// 		const batched = waveform.reshape([1, -1, 1]);
+			// 		const normalized = batched.div(32768.0);
+			// 		return normalized;
+			// 	});
+			//
+			// 	const prediction = await model.predict(audioTensor);
+			// 	const predictionArray = await prediction.array();
+
 		} catch (error) {
 			console.error('Error loading the model:', error);
 		}
