@@ -234,9 +234,9 @@ button:last-child {
   height: 100vh;
 }
 
-.result {
-  margin-top: 20px;
-  text-align: center;
+#result {
+  display: inline-block;
+  color: white;
 }
 
 
