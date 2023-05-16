@@ -53,11 +53,25 @@
 	//audio file
 	const fileInput = document.getElementById('audio-file');
 	const fileNameDisplay = document.getElementById('file-name');
+	const audioPlayer = document.createElement('audio');
+	audioPlayer.controls = true;
+    audioPlayer.style.display = 'none';
+    document.body.appendChild(audioPlayer);
 
 	fileInput.addEventListener('change', () => {
 		const file = fileInput.files[0];
 		fileNameDisplay.textContent = file ? file.name : '';
+		audioPlayer.src = URL.createObjectURL(file);
+        document.getElementById('play-btn').disabled = false;
 	});
+
+	function toggleAudioPlayback() {
+        if (audioPlayer.paused) {
+            audioPlayer.play();
+        } else {
+            audioPlayer.pause();
+        }
+    }
 </script>
 <script>
 	async function processAudio() {
