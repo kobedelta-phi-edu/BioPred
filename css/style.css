@@ -234,10 +234,17 @@ button:last-child {
   height: 100vh;
 }
 
-.result {
-  margin-top: 20px;
-  text-align: center;
+#result {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
 }
+
+#result p {
+  margin-right: 20px;
+}
+
 
 
 

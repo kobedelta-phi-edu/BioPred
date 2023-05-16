@@ -41,7 +41,12 @@
 	<p id="file-name"></p>
 </div>
 
-<div id="result"></div>
+<div id="result">
+	<p id="age-label">Age:</p>
+	<p id="sex-label">Sex:</p>
+	<p id="weight-label">Weight:</p>
+	<p id="height-label">Height:</p>
+</div>
 
 <script>
 	//audio file
@@ -94,7 +99,15 @@
 				const height = predictionArray[0][3];
 
 				const resultDisplay = document.getElementById('result');
-				resultDisplay.innerHTML = `Age: ${age.toFixed(2)}<br>Sex: ${sex.toFixed(2)}<br>Weight: ${weight.toFixed(2)}<br>Height: ${height.toFixed(2)}`;
+				let ageLabel = document.getElementById('age-label');
+				let sexLabel = document.getElementById('sex-label');
+				let weightLabel = document.getElementById('weight-label');
+				let heightLabel = document.getElementById('height-label');
+
+				ageLabel.innerHTML = `Age: ${age.toFixed(2)}`;
+				sexLabel.innerHTML = `Sex: ${sex.toFixed(2)}`;
+				weightLabel.innerHTML = `Weight: ${weight.toFixed(2)}`;
+				heightLabel.innerHTML = `Height: ${height.toFixed(2)}`;
 
 				processButton.textContent = 'PROCESS';
 				processButton.disabled = false;
