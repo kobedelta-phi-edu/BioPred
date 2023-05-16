@@ -17,7 +17,7 @@
 			<li><a href="us.html">THE RESEARCHERS</a></li>
 			<li><a href="how.html">HOW IT WORKS</a></li>
 		</ul>
-		<h1>KBD: BIOPRED (PLP)</h1>
+		<h1>KBD: BIOPRED (MFCC)</h1>
 	</nav>
 
 <!--	<div id="controls">-->
@@ -93,7 +93,7 @@
 			const formData = new FormData();
 			formData.append("audio_file", file);
 
-			const response = await fetch("http://localhost:8000/plp", {
+			const response = await fetch("http://localhost:8000/mfcc", {
 				method: "POST",
 				body: formData,
 			});
