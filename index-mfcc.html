@@ -35,6 +35,7 @@
 			<label for="audio-file" class="custom-file-input-label">Choose file</label>
 		</div>
 		<button id="process-btn" onclick="processAudio()">Process</button>
+		<button id="play-btn" disabled onclick="toggleAudioPlayback()">Play</button>
 
 	</div>
 	<p id="extractor-name-label">MFCC</p>
@@ -53,11 +54,25 @@
 	//audio file
 	const fileInput = document.getElementById('audio-file');
 	const fileNameDisplay = document.getElementById('file-name');
+	const audioPlayer = document.createElement('audio');
+	audioPlayer.controls = true;
+    audioPlayer.style.display = 'none';
+    document.body.appendChild(audioPlayer);
 
 	fileInput.addEventListener('change', () => {
 		const file = fileInput.files[0];
 		fileNameDisplay.textContent = file ? file.name : '';
+		audioPlayer.src = URL.createObjectURL(file);
+        document.getElementById('play-btn').disabled = false;
 	});
+
+	function toggleAudioPlayback() {
+        if (audioPlayer.paused) {
+            audioPlayer.play();
+        } else {
+            audioPlayer.pause();
+        }
+    }
 </script>
 <script>
 	async function processAudio() {
@@ -151,6 +166,6 @@
 
 </body>
 <footer>
-	<p>KOBEDELTAPHI © 2023</p>
+<!--	<p>KOBEDELTAPHI © 2023</p>-->
 </footer>
 </html>
